@@ -22,24 +22,20 @@
       cursor: pointer;
       border-radius: 8px;
     }
-
     .thanks {
       font-size: 40px;
       margin-top: 30px;
       animation: glow 1s infinite alternate;
     }
-
     @keyframes glow {
       from { color: #fff; }
       to { color: #22c55e; }
     }
-
     table {
       margin: auto;
       margin-top: 20px;
       border-collapse: collapse;
     }
-
     th, td {
       border: 1px solid white;
       padding: 10px 20px;
@@ -48,20 +44,16 @@
 </head>
 <body>
 
-<audio id="bgMusic" loop>
-  <source src="music.mp3" type="audio/mpeg">
-</audio>
-
 <div class="box">
   <h2 id="question">Enter your name</h2>
-  <input type="text" id="answer" placeholder="Type here">
+  <input type="text" id="answer">
   <br>
   <button onclick="nextStep()">Submit</button>
   <p id="result"></p>
 </div>
 
 <script>
-let step = 0; // controls full flow
+let step = 0;
 let playerName = "";
 let index = 0;
 let score = 0;
@@ -77,20 +69,18 @@ const questions = [
 
 function nextStep() {
   let input = document.getElementById("answer");
-  let ans = input.value.toLowerCase();
+  let ans = input.value.trim().toLowerCase();
 
-  // start music on first click
-  document.getElementById("bgMusic").play();
-
-  // STEP 0: TAKE NAME
+  // STEP 0: NAME
   if (step === 0) {
-    playerName = input.value.trim();
-    if (playerName === "") {
-      document.getElementById("result").innerText = "Please enter your name 😅";
+    if (ans === "") {
+      document.getElementById("result").innerText = "Enter your name!";
       return;
     }
 
+    playerName = input.value;
     step = 1;
+
     document.getElementById("question").innerText = "Do you know Aman?";
     input.value = "";
     document.getElementById("result").innerText = "";
@@ -103,7 +93,6 @@ function nextStep() {
       step = 2;
       document.getElementById("question").innerText = questions[index].q;
       input.value = "";
-      document.getElementById("result").innerText = "Let's start 😎";
     } else {
       document.body.innerHTML = "<h1>Bye Tata 👋</h1>";
     }
@@ -111,9 +100,7 @@ function nextStep() {
   }
 
   // STEP 2: QUIZ
-  let correct = questions[index].a;
-
-  if (ans === correct) {
+  if (ans === questions[index].a) {
     score++;
     document.getElementById("result").innerText = "Correct 😄";
   } else {
@@ -127,7 +114,7 @@ function nextStep() {
       document.getElementById("question").innerText = questions[index].q;
       input.value = "";
       document.getElementById("result").innerText = "";
-    }, 800);
+    }, 500);
   } else {
     showFinal();
   }
