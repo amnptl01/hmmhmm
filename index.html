@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Mini Game 🎮</title>
+  <title>Do You Know Aman? 🎮</title>
   <style>
     body {
       text-align: center;
@@ -23,16 +23,15 @@
       border-radius: 8px;
     }
 
-    /* Animation for final message */
     .thanks {
       font-size: 40px;
-      margin-top: 50px;
+      margin-top: 40px;
       animation: glow 1s infinite alternate;
     }
 
     @keyframes glow {
       from { color: #fff; }
-      to { color: #38bdf8; }
+      to { color: #22c55e; }
     }
   </style>
 </head>
@@ -42,28 +41,48 @@
   <h2 id="question"></h2>
   <input type="text" id="answer" placeholder="Type answer">
   <br>
-  <button onclick="nextQuestion()">Submit</button>
+  <button onclick="next()">Submit</button>
   <p id="result"></p>
 </div>
 
 <script>
+let started = false;
+
 const questions = [
-  { q: "What's my favorite color?", a: "blue" },
-  { q: "Where did we first meet?", a: "school" },
-  { q: "Who is my favorite person?", a: "you" }
+  { q: "What is my age?", a: "20" },
+  { q: "Which is my favorite sports team?", a: "rcb" },
+  { q: "Do I prefer dogs or cats?", a: "cats" },
+  { q: "What is my birth date?", a: "28" },
+  { q: "What is my favorite color?", a: "green" },
+  { q: "What is my favorite food?", a: "chicken" }
 ];
 
 let index = 0;
 let score = 0;
 
-// show first question
-document.getElementById("question").innerText = questions[index].q;
+// First question (no score)
+document.getElementById("question").innerText = "Do you know Aman?";
 
-function nextQuestion() {
-  let userAns = document.getElementById("answer").value.toLowerCase();
-  let correctAns = questions[index].a;
+function next() {
+  let ans = document.getElementById("answer").value.toLowerCase();
 
-  if(userAns === correctAns) {
+  // FIRST QUESTION LOGIC
+  if (!started) {
+    if (ans === "yes") {
+      started = true;
+      document.getElementById("question").innerText = questions[index].q;
+      document.getElementById("answer").value = "";
+      document.getElementById("result").innerText = "Let's start 😎";
+    } else {
+      document.body.innerHTML = "<h1>Bye Tata 👋</h1>";
+    }
+    return;
+  }
+
+  // MAIN QUESTIONS
+  let correct = questions[index].a;
+
+  if (ans === correct) {
     score++;
     document.getElementById("result").innerText = "Correct 😄";
   } else {
@@ -72,7 +91,7 @@ function nextQuestion() {
 
   index++;
 
-  if(index < questions.length) {
+  if (index < questions.length) {
     setTimeout(() => {
       document.getElementById("question").innerText = questions[index].q;
       document.getElementById("answer").value = "";
