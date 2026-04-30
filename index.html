@@ -56,14 +56,15 @@
   <h2 id="question">Enter your name</h2>
   <input type="text" id="answer" placeholder="Type here">
   <br>
-  <button onclick="next()">Submit</button>
+  <button onclick="nextStep()">Submit</button>
   <p id="result"></p>
 </div>
 
 <script>
+let step = 0; // controls full flow
 let playerName = "";
-let started = false;
-let nameTaken = false;
+let index = 0;
+let score = 0;
 
 const questions = [
   { q: "What is my age?", a: "20" },
@@ -74,31 +75,34 @@ const questions = [
   { q: "What is my favorite food?", a: "chicken" }
 ];
 
-let index = 0;
-let score = 0;
+function nextStep() {
+  let input = document.getElementById("answer");
+  let ans = input.value.toLowerCase();
 
-function next() {
-  let ans = document.getElementById("answer").value.toLowerCase();
-
-  // Play music on first click
+  // start music on first click
   document.getElementById("bgMusic").play();
 
-  // STEP 1: TAKE NAME
-  if (!nameTaken) {
-    playerName = document.getElementById("answer").value;
-    nameTaken = true;
+  // STEP 0: TAKE NAME
+  if (step === 0) {
+    playerName = input.value.trim();
+    if (playerName === "") {
+      document.getElementById("result").innerText = "Please enter your name 😅";
+      return;
+    }
 
+    step = 1;
     document.getElementById("question").innerText = "Do you know Aman?";
-    document.getElementById("answer").value = "";
+    input.value = "";
+    document.getElementById("result").innerText = "";
     return;
   }
 
-  // STEP 2: FIRST QUESTION (YES/NO)
-  if (!started) {
+  // STEP 1: YES / NO
+  if (step === 1) {
     if (ans === "yes") {
-      started = true;
+      step = 2;
       document.getElementById("question").innerText = questions[index].q;
-      document.getElementById("answer").value = "";
+      input.value = "";
       document.getElementById("result").innerText = "Let's start 😎";
     } else {
       document.body.innerHTML = "<h1>Bye Tata 👋</h1>";
@@ -106,7 +110,7 @@ function next() {
     return;
   }
 
-  // MAIN QUIZ
+  // STEP 2: QUIZ
   let correct = questions[index].a;
 
   if (ans === correct) {
@@ -121,7 +125,7 @@ function next() {
   if (index < questions.length) {
     setTimeout(() => {
       document.getElementById("question").innerText = questions[index].q;
-      document.getElementById("answer").value = "";
+      input.value = "";
       document.getElementById("result").innerText = "";
     }, 800);
   } else {
@@ -131,4 +135,23 @@ function next() {
 
 function showFinal() {
   document.body.innerHTML = `
-    <
+    <h1>🎉 Game Completed 🎉</h1>
+
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Score</th>
+      </tr>
+      <tr>
+        <td>${playerName}</td>
+        <td>${score} / ${questions.length}</td>
+      </tr>
+    </table>
+
+    <div class="thanks">✨ THANK YOU ✨</div>
+  `;
+}
+</script>
+
+</body>
+</html>
