@@ -10,7 +10,7 @@
       color: white;
     }
     .box {
-      margin-top: 100px;
+      margin-top: 80px;
     }
     input {
       padding: 10px;
@@ -25,7 +25,7 @@
 
     .thanks {
       font-size: 40px;
-      margin-top: 40px;
+      margin-top: 30px;
       animation: glow 1s infinite alternate;
     }
 
@@ -33,20 +33,37 @@
       from { color: #fff; }
       to { color: #22c55e; }
     }
+
+    table {
+      margin: auto;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      border: 1px solid white;
+      padding: 10px 20px;
+    }
   </style>
 </head>
 <body>
 
+<audio id="bgMusic" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
 <div class="box">
-  <h2 id="question"></h2>
-  <input type="text" id="answer" placeholder="Type answer">
+  <h2 id="question">Enter your name</h2>
+  <input type="text" id="answer" placeholder="Type here">
   <br>
   <button onclick="next()">Submit</button>
   <p id="result"></p>
 </div>
 
 <script>
+let playerName = "";
 let started = false;
+let nameTaken = false;
 
 const questions = [
   { q: "What is my age?", a: "20" },
@@ -60,13 +77,23 @@ const questions = [
 let index = 0;
 let score = 0;
 
-// First question (no score)
-document.getElementById("question").innerText = "Do you know Aman?";
-
 function next() {
   let ans = document.getElementById("answer").value.toLowerCase();
 
-  // FIRST QUESTION LOGIC
+  // Play music on first click
+  document.getElementById("bgMusic").play();
+
+  // STEP 1: TAKE NAME
+  if (!nameTaken) {
+    playerName = document.getElementById("answer").value;
+    nameTaken = true;
+
+    document.getElementById("question").innerText = "Do you know Aman?";
+    document.getElementById("answer").value = "";
+    return;
+  }
+
+  // STEP 2: FIRST QUESTION (YES/NO)
   if (!started) {
     if (ans === "yes") {
       started = true;
@@ -79,7 +106,7 @@ function next() {
     return;
   }
 
-  // MAIN QUESTIONS
+  // MAIN QUIZ
   let correct = questions[index].a;
 
   if (ans === correct) {
@@ -104,12 +131,4 @@ function next() {
 
 function showFinal() {
   document.body.innerHTML = `
-    <h1>🎉 Game Completed 🎉</h1>
-    <h2>You got ${score} / ${questions.length} correct 😎</h2>
-    <div class="thanks">✨ THANK YOU ✨</div>
-  `;
-}
-</script>
-
-</body>
-</html>
+    <
